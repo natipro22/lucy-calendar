@@ -1,20 +1,31 @@
 <div class="relative w-64">
     <label for="date-picker" class="block text-sm font-medium text-gray-700 mb-1">
-      Select Date
+      {{ label }}
     </label>
     <div class="relative">
       <input
         type="text"
         id="date-picker"
         readonly
-        class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        placeholder="YYYY-MM-DD"
+        class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-800"
+        [placeholder]="placeholder"
         (click)="toggleCalendar()"
-        [value]="selectedDate ? (selectedDate | date: 'yyyy-MM-dd') : ''"
+        [value]="selectedDate ? (selectedDate | date: 'dd/MM/yyyy') : ''"
       />
       <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 8v8m0 0H8m4 0h4m0-8a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-gray-500 hover:text-gray-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 4h18M3 8h18M3 20h18V8H3v12zm0-12h18v4H3V8z"
+          />
         </svg>
       </div>
     </div>
@@ -26,18 +37,36 @@
       [ngClass]="{'hidden': !calendarVisible}"
     >
       <div class="flex justify-between items-center mb-2">
-        <button (click)="prevMonth()" class="text-gray-500 hover:text-gray-700">&lt;</button>
+        <button (click)="prevMonth()" class="text-gray-500 hover:text-gray-700"><svg
+          class="h-6 w-6 text-gray-500 hover:text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        </button>
         <button (click)="toggleMonthYearSelection()" class="font-medium text-gray-700">
           {{ monthNames[selectedMonth] }} {{ selectedYear }}
         </button>
-        <button (click)="nextMonth()" class="text-gray-500 hover:text-gray-700">&gt;</button>
+        <button (click)="nextMonth()" class="text-gray-500 hover:text-gray-700"><svg
+          class="h-6 w-6 text-gray-500 hover:text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        </button>
       </div>
   
       <!-- Combined Dropdown -->
   <div>
 <div class="flex flex-col space-y-2">
     <!-- Month-Year Combined Dropdown -->
-    <div class="overflow-y-auto max-h-64"> <!-- Adjust max-h to fit your needs -->
+    <div class="overflow-y-auto"> <!-- Adjust max-h to fit your needs -->
       <div class="grid grid-cols-2 gap-2">
         <!-- Month Dropdown -->
         <div>
@@ -45,7 +74,7 @@
           <select
           [(ngModel)]="selectedMonth"
             (change)="onMonthChange($event)"
-            class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none"
           >
             <option *ngFor="let month of monthNames; let i = index" [value]="i">{{ month }}</option>
           </select>
@@ -57,7 +86,7 @@
           <select
           [(ngModel)]="selectedYear"
             (change)="onYearChange($event)"
-            class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none"
           >
             <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
           </select>

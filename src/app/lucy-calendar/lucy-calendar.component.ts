@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 // Helper functions for Ethiopian calendar (simplified)
 function gregorianToEthiopian(date: Date): { year: number, month: number, day: number } {
@@ -22,6 +22,13 @@ function ethiopianToGregorian(year: number, month: number, day: number): Date {
   styleUrl: './lucy-calendar.component.css'
 })
 export class LucyCalendarComponent {
+
+  @Input() label: string = 'Select Date';
+  @Input() value: Date = new Date();
+  @Input() placeholder : string = 'DD/MM/YYYY';
+  @Input() min : Date = new Date();
+  @Input() max : Date = new Date();
+
   calendarVisible: boolean = false;
   monthYearSelectionVisible: boolean = true;
   dropdownVisible: boolean = true;
