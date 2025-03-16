@@ -30,7 +30,6 @@ export class LucyCalendarComponent implements OnInit {
 
   calendarVisible: boolean = false;
   monthYearSelectionVisible: boolean = true;
-  dropdownVisible: boolean = true;
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
   selectedDateEt: string | null = null;
@@ -57,7 +56,6 @@ export class LucyCalendarComponent implements OnInit {
 
   toggleMonthYearSelection() {
     this.monthYearSelectionVisible = !this.monthYearSelectionVisible;
-    this.toggleDropdown();
   }
 
   selectMonthYear(month: number, year: number) {
@@ -81,34 +79,26 @@ export class LucyCalendarComponent implements OnInit {
   }
 
   prevMonth() {
-    this.selectedMonth = (this.selectedMonth - 1 + 13) % 13;
+    this.selectedMonth = (this.selectedMonth - 1 + 13) % 13 || 13;
     this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
 
   }
 
   nextMonth() {
-    // console.log(this.selectedMonth);
     this.selectedMonth = (this.selectedMonth + 1) % 13;
-    console.log('month', this.selectedMonth);
     this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-    console.log('current date', this.currentDate);
 
   }
 
   getLeadingEmptyDays(): any[] {
-    // console.log(this.selectedYear, this.selectedMonth);
     const firstDay = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
     console.log('firstDay', firstDay.getDay());
     return Array(firstDay.getDay()).fill(null);
   }
 
   get daysInMonth(): number[] {
-    const days = [];
-    const daysInEthiopianMonth = this.selectedMonth === 12 ? 6 : 30; // Pagumē has 6 days in a leap year
-    for (let i = 1; i <= daysInEthiopianMonth; i++) {
-      days.push(i);
-    }
-    return days;
+    const daysInEthiopianMonth = this.selectedMonth === 13 ? 6 : 30; // Pagumē has 6 days in a leap year
+    return Array.from({ length: daysInEthiopianMonth }, (_, i) => i + 1);
   }
 
   selectDate(day: number) {
@@ -118,8 +108,11 @@ export class LucyCalendarComponent implements OnInit {
     this.calendarVisible = false;
   }
 
-  toggleDropdown() {
-    this.dropdownVisible = !this.dropdownVisible;
+  clearDate() {
+    this.selectedDate = null;
+    this.selectedDateEt = null;
+    this.selectedDay = 0;
+    this.calendarVisible = false;
   }
 
   @HostListener('document:click', ['$event'])
