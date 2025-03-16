@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CustomDateConverter } from '../../types/ethiopian-date';
+import { EthioDate } from '../../types/date-convertor';
 // // Helper functions for Ethiopian calendar (simplified)
 // function gregorianToEthiopian(date: Date): { year: number, month: number, day: number } {
 //   // Conversion logic here
@@ -34,8 +35,8 @@ export class LucyCalendarComponent {
   /**
    *
    */
-  constructor(private ethiopianDate: CustomDateConverter) {
-    this.selectedYear = this.ethiopianDate.GregorianToEthiopic(this.currentDate)[0];
+  constructor(private custom: CustomDateConverter, private ethiopianDate: EthioDate) {
+    this.selectedYear = this.ethiopianDate.toEthiopian(this.currentDate)[0];
   }
 
   calendarVisible: boolean = false;
@@ -65,7 +66,7 @@ export class LucyCalendarComponent {
   selectMonthYear(month: number, year: number) {
     this.selectedMonth = month;
     this.selectedYear = year;
-    this.currentDate = this.ethiopianDate.EthiopicToGregorian({ year, month, day: 1 });
+    this.currentDate = this.ethiopianDate.toGregorian({ year, month, day: 1 });
     // this.monthYearSelectionVisible = false;
     // this.dropdownVisible = false;
   }
@@ -84,7 +85,7 @@ export class LucyCalendarComponent {
 
   prevMonth() {
     this.selectedMonth = (this.selectedMonth - 1 + 13) % 13;
-    this.currentDate = this.ethiopianDate.EthiopicToGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.currentDate = this.ethiopianDate.toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
 
   }
 
@@ -92,15 +93,15 @@ export class LucyCalendarComponent {
     // console.log(this.selectedMonth);
     this.selectedMonth = (this.selectedMonth + 1) % 13;
     console.log('month', this.selectedMonth);
-    this.currentDate = this.ethiopianDate.EthiopicToGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.currentDate = this.ethiopianDate.toGregorian({ year: this.selectedYear, month: this.selectedMonth + 1, day: 1 });
     console.log('current date', this.currentDate);
 
   }
 
   getLeadingEmptyDays(): any[] {
     // console.log(this.selectedYear, this.selectedMonth);
-    const firstDay = this.ethiopianDate.EthiopicToGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-    // console.log('firstDay', firstDay);
+    const firstDay = this.ethiopianDate.toGregorian({ year: this.selectedYear, month: this.selectedMonth + 1, day: 1 });
+    console.log('firstDay', firstDay.getDay());
     return Array(firstDay.getDay()).fill(null);
   }
 
@@ -114,7 +115,7 @@ export class LucyCalendarComponent {
   }
 
   selectDate(day: number) {
-    this.selectedDate = this.ethiopianDate.EthiopicToGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
+    this.selectedDate = this.ethiopianDate.toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
     this.calendarVisible = false;
   }
 
