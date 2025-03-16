@@ -43,7 +43,9 @@ function Mod(i: number, j: number): number {
 function GuessEraFromJDN(jdn: number): number {
     return (jdn >= (JD_EPOCH_OFFSET_AMETE_MIHRET + 365)) ? JD_EPOCH_OFFSET_AMETE_MIHRET : JD_EPOCH_OFFSET_AMETE_ALEM;
 }
-
+export function isEthiopianLeapYear(year: number) {
+    return year % 4 === 3; // Ethiopian leap years are multiples of 4 with a remainder of 3
+}
 function IsGregorianLeap(year: number): boolean {
     return (year % 4 === 0) && ((year % 100 !== 0) || (year % 400 === 0));
 }
