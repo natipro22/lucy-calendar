@@ -23,13 +23,14 @@ export class LucyCalendarComponent {
   dropdownVisible: boolean = true;
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
+  selectedDateEt: string | null = null;
   selectedYear: number = toEthiopian(this.currentDate)[0];
-  selectedMonth: number = 0; // Start with Meskerem (January in Ethiopian calendar)
+  selectedMonth: number = 1; // Start with Meskerem (January in Ethiopian calendar)
   monthNames: string[] = [
     "መስከረም", "ጥቅምት", "ህዳር", "ታህሳስ", "ጥር", "የካቲት",
     "መጋቢት", "ሚይዚያ", "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜ"
   ];
-  dayNames: string[] = ["እሁድ", "ሰኞ", "ማክሰኞ ", " ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ"];
+  dayNames: string[] = ["እሁድ", "ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ"];
 
   availableYears: number[] = Array.from({ length: 101 }, (_, i) => this.currentDate.getFullYear() - 50 + i);
 
@@ -72,14 +73,14 @@ export class LucyCalendarComponent {
     // console.log(this.selectedMonth);
     this.selectedMonth = (this.selectedMonth + 1) % 13;
     console.log('month', this.selectedMonth);
-    this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth + 1, day: 1 });
+    this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
     console.log('current date', this.currentDate);
 
   }
 
   getLeadingEmptyDays(): any[] {
     // console.log(this.selectedYear, this.selectedMonth);
-    const firstDay = toGregorian({ year: this.selectedYear, month: this.selectedMonth + 1, day: 1 });
+    const firstDay = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
     console.log('firstDay', firstDay.getDay());
     return Array(firstDay.getDay()).fill(null);
   }
@@ -95,6 +96,7 @@ export class LucyCalendarComponent {
 
   selectDate(day: number) {
     this.selectedDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
+    this.selectedDateEt = `${this.selectedYear}/${this.selectedMonth.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
     this.calendarVisible = false;
   }
 
