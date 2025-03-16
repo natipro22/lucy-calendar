@@ -27,8 +27,9 @@ export function toGregorian(param: { year: number, month: number, day: number })
     return new Date(Date.UTC(date[0], date[1] - 1, date[2]));
 }
 
-export function toEthiopian(gcDate: Date): number[] {
-    let jdn = GregorianToJdn(gcDate.getFullYear(), gcDate.getMonth(), gcDate.getDay());
+export function toEthiopian(gcDate: Date): { year: number, month: number, day: number } {
+    console.log('selected date', gcDate.getFullYear(), gcDate.getMonth() + 1, gcDate.getDate());
+    const jdn = GregorianToJdn(gcDate.getFullYear(), gcDate.getMonth() + 1, gcDate.getDate());
     return JdnToEthiopic(jdn, GuessEraFromJDN(jdn));
 }
 
@@ -48,7 +49,7 @@ function IsGregorianLeap(year: number): boolean {
 }
 
 function GregorianToJdn(year: number, month: number, day: number): number {
-    const s = Quotient(year, 4) - Quotient(year - 1, 4) - Quotient(year, 100) + Quotient(year - 1, 100) + Quotient(year, 400) - Quotient(year - 1, 400);;
+    const s = Quotient(year, 4) - Quotient(year - 1, 4) - Quotient(year, 100) + Quotient(year - 1, 100) + Quotient(year, 400) - Quotient(year - 1, 400);
 
     const t = Quotient(14 - month, 12);
 
@@ -59,7 +60,7 @@ function GregorianToJdn(year: number, month: number, day: number): number {
     return j;
 }
 
-function JdnToEthiopic(jdn: number, era?: number): number[] {
+function JdnToEthiopic(jdn: number, era?: number): { year: number, month: number, day: number } {
     era = era ?? GuessEraFromJDN(jdn);
     const r = Mod((jdn - era), 1461);
     const n = Mod(r, 365) + 365 * Quotient(r, 1460);
@@ -67,7 +68,7 @@ function JdnToEthiopic(jdn: number, era?: number): number[] {
     const year = 4 * Quotient((jdn - era), 1461) + Quotient(r, 365) - Quotient(r, 1460);;
     const month = Quotient(n, 30) + 1;
     const day = Mod(n, 30) + 1;
-    return [year, Number(month), Number(day)];
+    return { year, month: Number(month), day: Number(day) };
 }
 
 function EthCopticToJdn(year: number, month: number, day: number, era: number): number {
@@ -124,7 +125,7 @@ function CopticToGregorian(year: number, month: number, day: number): number[] {
     return JdnToGregorian(jdn);
 }
 
-function GregorianToCoptic(year: number, month: number, day: number): number[] {
+function GregorianToCoptic(year: number, month: number, day: number): { year: number, month: number, day: number } {
     let jdn = GregorianToJdn(year, month, day);
     return JdnToEthiopic(jdn, JD_EPOCH_OFFSET_COPTIC);
 }

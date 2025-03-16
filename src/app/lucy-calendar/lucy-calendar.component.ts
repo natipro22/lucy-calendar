@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { toEthiopian, toGregorian } from '../../types/date-convertor';
 
@@ -10,7 +10,17 @@ import { toEthiopian, toGregorian } from '../../types/date-convertor';
   templateUrl: './lucy-calendar.component.html',
   styleUrl: './lucy-calendar.component.css'
 })
-export class LucyCalendarComponent {
+export class LucyCalendarComponent implements OnInit {
+  ngOnInit(): void {
+    if (this.selectedDate) {
+      this.selectedYear = this.selectedDate.getFullYear();
+      this.selectedMonth = this.selectedDate.getMonth();
+      this.selectedDay = this.selectedDate.getDay();
+    }
+    if (this.selectedDay !== 0) {
+      this.selectDate(this.selectedDay);
+    }
+  }
   @Input() label: string = 'Select Date';
   @Input() value: Date = new Date();
   @Input() placeholder: string = 'DD/MM/YYYY';
@@ -24,8 +34,9 @@ export class LucyCalendarComponent {
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
   selectedDateEt: string | null = null;
-  selectedYear: number = toEthiopian(this.currentDate)[0];
+  selectedYear: number = toEthiopian(this.currentDate).year;
   selectedMonth: number = 1; // Start with Meskerem (January in Ethiopian calendar)
+  selectedDay: number = 0;
   monthNames: string[] = [
     "መስከረም", "ጥቅምት", "ህዳር", "ታህሳስ", "ጥር", "የካቲት",
     "መጋቢት", "ሚይዚያ", "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜ"
@@ -36,6 +47,12 @@ export class LucyCalendarComponent {
 
   toggleCalendar() {
     this.calendarVisible = !this.calendarVisible;
+    if (this.selectedDate) {
+      const et = toEthiopian(this.selectedDate);
+      this.selectedYear = et.year;
+      this.selectedMonth = et.month;
+      this.selectedDay = et.day;
+    }
   }
 
   toggleMonthYearSelection() {
@@ -95,6 +112,7 @@ export class LucyCalendarComponent {
   }
 
   selectDate(day: number) {
+    this.selectedDay = day;
     this.selectedDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
     this.selectedDateEt = `${this.selectedYear}/${this.selectedMonth.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
     this.calendarVisible = false;
@@ -102,5 +120,13 @@ export class LucyCalendarComponent {
 
   toggleDropdown() {
     this.dropdownVisible = !this.dropdownVisible;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.relative')) {
+      this.calendarVisible = false;
+    }
   }
 }
