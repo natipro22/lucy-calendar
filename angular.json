@@ -91,6 +91,39 @@
           }
         }
       }
+    },
+    "lucy-calendar": {
+      "projectType": "library",
+      "root": "projects/lucy-calendar",
+      "sourceRoot": "projects/lucy-calendar/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/lucy-calendar/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/lucy-calendar/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/lucy-calendar/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/lucy-calendar/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
