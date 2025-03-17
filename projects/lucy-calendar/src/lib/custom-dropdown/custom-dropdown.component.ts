@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, output, Output, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-dropdown',
+  selector: 'lucy-dropdown',
   standalone: true,
   templateUrl: './custom-dropdown.component.html',
   imports: [CommonModule],
