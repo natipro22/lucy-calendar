@@ -36,6 +36,8 @@ export class LucyCalendarComponent implements OnInit {
   @Input() min: Date | null = null;
   @Input() max: Date | null = null;
   @Input() dateFormat: string = 'YYYY/MM/dd'; // New input for date format
+  @Input() disabled: boolean = false; // New input for disabled state
+  @Input() readonly: boolean = true; // New input for readonly state
 
   calendarVisible: boolean = false;
   currentDate: Date = new Date();
@@ -64,6 +66,7 @@ export class LucyCalendarComponent implements OnInit {
   }
 
   toggleCalendar() {
+    // if (this.disabled) return; // Prevent toggling if disabled
     this.calendarVisible = !this.calendarVisible;
     if (this.selectedDate) {
       const et = toEthiopian(this.selectedDate);
@@ -113,6 +116,7 @@ export class LucyCalendarComponent implements OnInit {
   }
 
   selectDate(day: number) {
+    // if (this.disabled) return; // Prevent selecting date if disabled
     this.selectedDay = day;
     this.selectedDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
     this.selectedDateEt = `${this.selectedYear}/${this.selectedMonth.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
@@ -120,6 +124,7 @@ export class LucyCalendarComponent implements OnInit {
   }
 
   clearDate() {
+    // if (this.disabled) return; // Prevent clearing date if disabled
     this.selectedDate = null;
     this.selectedDateEt = null;
     this.selectedDay = 0;
