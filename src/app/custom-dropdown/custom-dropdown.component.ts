@@ -28,13 +28,40 @@ export class DropdownComponent<T> implements OnInit {
     if (!this.selected && this.options.length > 0) {
       this.selected = this.options[0]; // Default to first option if no selection
     }
+    // Scroll to the selected option if it exists
+    setTimeout(() => {
+      if (this.selected) {
+        const selectedIndex = this.options.indexOf(this.selected);
+        if (selectedIndex >= 0) {
+          const dropdownElement = this.dropdownContainer.nativeElement;
+          const selectedElement = dropdownElement.children[selectedIndex];
+          if (selectedElement) {
+            selectedElement.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      }
+    });
   }
 
   toggleDropdown(event: Event): void {
-    // Stop propagation so that the document click listener doesn't immediately close the dropdown.
-    event.stopPropagation();
+    console.log('Dropdown clicked. Selected item:', this.selected);
     this.dropdownOpen = !this.dropdownOpen;
+
+    if (this.dropdownOpen && this.selected) {
+      setTimeout(() => {
+        const selectedIndex = this.options.indexOf(this.selected);
+        if (selectedIndex >= 0) {
+          const dropdownElement = this.dropdownContainer.nativeElement.querySelector('ul');
+          const showedItems = 6;
+          const selectedElement = dropdownElement.children[selectedIndex];
+          if (selectedElement) {
+            selectedElement.scrollIntoView({ block: 'nearest' });
+          }
+        }
+      });
+    }
   }
+
   onOptionClick(option: T, index: number): void {
     this.selected = option;
     this.selectedChange.emit(option);
