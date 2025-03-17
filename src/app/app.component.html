@@ -1,6 +1,9 @@
-<app-lucy-calendar label="Event date" placeholder="Enter date"></app-lucy-calendar>
+<app-lucy-calendar label="Event date" placeholder="Enter date" [max]="today" [min]="min"></app-lucy-calendar>
 <app-lucy-calendar label="Birth date" placeholder="Enter Birth date"></app-lucy-calendar>
 <div class="bg-blue-500 text-white p-4">
   Tailwind CSS is working!
 </div>
 <input type="date" />
+
+<app-dropdown [options]="availableYears">
+</app-dropdown>

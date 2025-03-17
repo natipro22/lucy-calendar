@@ -18,22 +18,32 @@
   <div id="calendar" class="absolute mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg p-4 z-10"
     [ngClass]="{'hidden': !calendarVisible}">
     <div class="flex justify-between items-center mb-2">
-      <button (click)="prevMonth()" class="text-gray-500 hover:text-gray-700"><svg
-          class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+      <button (click)="prevMonth()" class="text-gray-500 hover:text-gray-700" [disabled]="isPrevMonthDisabled()">
+        <svg class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
       </button>
-      <button (click)="toggleMonthYearSelection()" class="font-medium text-gray-700">
+      <!-- (click)="toggleMonthYearSelection()" -->
+      <button class="font-medium text-gray-700">
         {{ monthNames[selectedMonth - 1] }} {{ selectedYear }}
       </button>
-      <button (click)="nextMonth()" class="text-gray-500 hover:text-gray-700" [disabled]="isNextMonthDisabled()"><svg
-          class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+      <button (click)="nextMonth()" class="text-gray-500 hover:text-gray-700" [disabled]="isNextMonthDisabled()">
+        <svg class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
       </button>
     </div>
+
+    <div class="grid grid-cols-2 gap-2">
+      <app-dropdown [options]="filteredMonths" [selected]="selectedMonth" (selectedChange)="onMonthChanges($event)"
+        [displayFn]="monthDisplay">
+      </app-dropdown>
+      <app-dropdown [options]="filteredYears" [selected]="selectedYear"
+        (selectedChange)="onYearChanges($event)"></app-dropdown>
+    </div>
+
 
     <!-- Combined Dropdown -->
     <div>
@@ -44,8 +54,8 @@
             <!-- Month Dropdown -->
 
             <!-- class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" -->
-            <div>
-              <!-- <label class="block text-sm font-medium text-gray-700 mb-1">ወር</label> -->
+            <!-- <label class="block text-sm font-medium text-gray-700 mb-1">ወር</label> -->
+            <!-- <div>
               <select [(ngModel)]="selectedMonth" (change)="onMonthChange($event)"
                 class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none">
                 <option *ngFor="let month of monthNames; let i = index" [value]="i + 1"
@@ -53,16 +63,16 @@
                   {{ month }}
                 </option>
               </select>
-            </div>
+            </div> -->
 
             <!-- Year Dropdown -->
-            <div class="max-h-1">
-              <!-- <label class="block text-sm font-medium text-gray-700 mb-1">አመት</label> -->
+            <!-- <label class="block text-sm font-medium text-gray-700 mb-1">አመት</label> -->
+            <!-- <div class="max-h-1">
               <select [(ngModel)]="selectedYear" (change)="onYearChange($event)" [attr.size]="1"
                 class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none">
                 <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
               </select>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

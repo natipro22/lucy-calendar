@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { isEthiopianLeapYear, toEthiopian, toGregorian } from '../../types/date-convertor';
+import { DropdownComponent } from '../custom-dropdown/custom-dropdown.component';
 
 @Component({
   selector: 'app-lucy-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownComponent],
   templateUrl: './lucy-calendar.component.html',
   styleUrl: './lucy-calendar.component.css'
 })
@@ -15,17 +16,25 @@ export class LucyCalendarComponent implements OnInit {
     if (this.selectedDate) {
       this.selectedYear = this.selectedDate.getFullYear();
       this.selectedMonth = this.selectedDate.getMonth();
-      this.selectedDay = this.selectedDate.getDay();
+      this.selectedDay = this.selectedDate.getDate();
+    }
+    else {
+      const today = toEthiopian(new Date());
+      this.selectedYear = today.year;
+      this.selectedMonth = today.month;
+      this.selectedDay = today.day;
     }
     if (this.selectedDay !== 0) {
       this.selectDate(this.selectedDay);
     }
+    this.filteredMonths = this.availableMonths.filter(m => !this.isMonthOptionDisabled(m));
+    this.filteredYears = this.availableYears.filter(y => !this.isYearOptionDisabled(y));
   }
   @Input() label: string = 'Select Date';
   @Input() value: Date = new Date();
   @Input() placeholder: string = 'DD/MM/YYYY';
-  @Input() min: Date = new Date();
-  @Input() max: Date = new Date();
+  @Input() min: Date | null = null;
+  @Input() max: Date | null = null;
 
 
   calendarVisible: boolean = false;
@@ -42,8 +51,18 @@ export class LucyCalendarComponent implements OnInit {
   ];
   dayNames: string[] = ["እሁድ", "ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ"];
 
-  availableYears: number[] = Array.from({ length: 101 }, (_, i) => this.currentDate.getFullYear() - 50 + i)
-    .filter(year => year <= toEthiopian(this.max).year);
+  availableYears: number[] = Array.from({ length: 101 }, (_, i) => this.currentDate.getFullYear() - 50 + i);
+  filteredYears = this.availableYears.filter(y => !this.isYearOptionDisabled(y));
+  availableMonths = Array.from({ length: 13 }, (_, i) => i + 1);
+  filteredMonths = this.availableMonths.filter(month => !this.isMonthOptionDisabled(month));
+
+
+  refreshMonthOptions() {
+    this.filteredMonths = this.availableMonths.filter(month => !this.isMonthOptionDisabled(month));
+  };
+  refreshYearOptions(): void {
+    this.filteredYears = this.availableYears.filter(y => !this.isYearOptionDisabled(y));
+  }
 
   toggleCalendar() {
     this.calendarVisible = !this.calendarVisible;
@@ -55,28 +74,39 @@ export class LucyCalendarComponent implements OnInit {
     }
   }
 
-  toggleMonthYearSelection() {
-    this.monthYearSelectionVisible = !this.monthYearSelectionVisible;
-  }
+  monthDisplay = (month: number): string => this.monthNames[month - 1]; /* Month numbers are 1-indexed so adjust for array (0-indexed)*/
+
+  // toggleMonthYearSelection() {
+  //   this.monthYearSelectionVisible = !this.monthYearSelectionVisible;
+  // }
 
   selectMonthYear(month: number, year: number) {
     this.selectedMonth = month;
     this.selectedYear = year;
     this.currentDate = toGregorian({ year, month, day: 1 });
-    // this.monthYearSelectionVisible = false;
-    // this.dropdownVisible = false;
   }
 
-  onMonthChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const month = parseInt(target.value, 10);
+  // onMonthChange(event: Event) {
+  //   const target = event.target as HTMLSelectElement;
+  //   const month = parseInt(target.value, 10);
+  //   this.selectMonthYear(month, this.selectedYear);
+  // }
+
+  onMonthChanges(month: number) {
+    console.log('month', month);
     this.selectMonthYear(month, this.selectedYear);
+    this.refreshYearOptions();
   }
 
-  onYearChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const year = parseInt(target.value, 10);
+  // onYearChange(event: Event) {
+  //   const target = event.target as HTMLSelectElement;
+  //   const year = parseInt(target.value, 10);
+  //   this.selectMonthYear(this.selectedMonth, year);
+  // }
+
+  onYearChanges(year: number) {
     this.selectMonthYear(this.selectedMonth, year);
+    this.refreshMonthOptions();
   }
 
   prevMonth() {
@@ -88,7 +118,6 @@ export class LucyCalendarComponent implements OnInit {
   nextMonth() {
     this.selectedMonth = (this.selectedMonth + 1) % 13 || 13;
     this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-
   }
 
   getLeadingEmptyDays(): any[] {
@@ -117,40 +146,49 @@ export class LucyCalendarComponent implements OnInit {
   }
 
   isDayDisabled(day: number): boolean {
+    if (this.max === null)
+      return false;
     const date = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
-    if (date > this.max) {
-      console.log(date);
-    }
     return date > this.max;
   }
 
   isNextMonthDisabled(): boolean {
+    if (this.max === null)
+      return false;
     const nextMonthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth + 1, day: 1 });
     return nextMonthDate > this.max;
   }
 
-  isMonthDisabled(): boolean {
-    const monthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-    return monthDate > this.max || (this.selectedYear === this.max.getFullYear() && this.selectedMonth > this.max.getMonth() + 1);
+  isPrevMonthDisabled(): boolean {
+    if (this.min === null)
+      return false;
+    const prevMonthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth - 1, day: 1 });
+    return prevMonthDate < this.min;
   }
 
-  isYearDisabled(): boolean {
-    const yearDate = toGregorian({ year: this.selectedYear, month: 1, day: 1 });
-    return yearDate > this.max;
-  }
+  // isMonthDisabled(): boolean {
+  //   if (this.max === null)
+  //     return false;
+  //   const monthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+  //   return monthDate > this.max || (this.selectedYear === this.max.getFullYear() && this.selectedMonth > this.max.getMonth() + 1);
+  // }
+
+  // isYearDisabled(): boolean {
+  //   if (this.max === null)
+  //     return false;
+  //   const yearDate = toGregorian({ year: this.selectedYear, month: 1, day: 1 });
+  //   return yearDate > this.max;
+  // }
 
   isMonthOptionDisabled(monthIndex: number): boolean {
-    const monthDate = toGregorian({ year: this.selectedYear, month: monthIndex + 1, day: 1 });
-    if (monthIndex === 6) {
-      const dis = monthDate > this.max;
-      console.log(dis);
-    }
-    return monthDate > this.max || (this.selectedYear === this.max.getFullYear() && monthIndex > this.max.getMonth());
+    const monthDate = toGregorian({ year: this.selectedYear, month: monthIndex, day: 1 });
+    return (this.max !== null && (monthDate > this.max || (this.selectedYear === this.max.getFullYear() && monthIndex > this.max.getMonth())))
+      || (this.min !== null && (monthDate < this.min || (this.selectedYear === this.min.getFullYear() && monthIndex < this.min.getMonth())));
   }
 
   isYearOptionDisabled(year: number): boolean {
     const yearDate = toGregorian({ year: year, month: 1, day: 1 });
-    return yearDate > this.max;
+    return (this.max !== null && yearDate > this.max) || (this.min !== null && yearDate < this.min);
   }
 
   @HostListener('document:click', ['$event'])
