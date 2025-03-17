@@ -23,12 +23,10 @@ export function toGregorian(param: { year: number, month: number, day: number })
 
     let jdn = EthiopicToJdn({ year: param.year, month: param.month, day: param.day, era });
     const date = JdnToGregorian(jdn);
-    // console.log('f-date', date);
     return new Date(Date.UTC(date[0], date[1] - 1, date[2]));
 }
 
 export function toEthiopian(gcDate: Date): { year: number, month: number, day: number } {
-    console.log('selected date', gcDate.getFullYear(), gcDate.getMonth() + 1, gcDate.getDate());
     const jdn = GregorianToJdn(gcDate.getFullYear(), gcDate.getMonth() + 1, gcDate.getDate());
     return JdnToEthiopic(jdn, GuessEraFromJDN(jdn));
 }
@@ -90,13 +88,7 @@ function JdnToGregorian(j: number): number[] {
     const year: number = aprime + 1;
     const t: number = Quotient((364 + s - n), 306);
     const month: number = t * (Quotient(n, 31) + 1) + (1 - t) * (Quotient((5 * (n - s) + 13), 153) + 1);
-    //        
-    //		int day    = t * ( n - s - 31*month + 32 )
-    //		           + ( 1 - t ) * ( n - s - 30*month - quotient((3*month - 2), 5) + 33 )
-    //		;
-    //		
 
-    // int n2000 = quotient( r2000, 730484 );
     n += 1 - Quotient(r2000, 730484);
     let day = n;
 

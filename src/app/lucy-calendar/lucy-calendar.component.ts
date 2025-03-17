@@ -19,7 +19,7 @@ export class LucyCalendarComponent implements OnInit {
       this.selectedDay = this.selectedDate.getDate();
     }
     else {
-      const today = toEthiopian(new Date());
+      const today = toEthiopian(this.default);
       this.selectedYear = today.year;
       this.selectedMonth = today.month;
       this.selectedDay = today.day;
@@ -31,14 +31,13 @@ export class LucyCalendarComponent implements OnInit {
     this.filteredYears = this.availableYears.filter(y => !this.isYearOptionDisabled(y));
   }
   @Input() label: string = 'Select Date';
-  @Input() value: Date = new Date();
+  @Input() default: Date = new Date();
   @Input() placeholder: string = 'DD/MM/YYYY';
   @Input() min: Date | null = null;
   @Input() max: Date | null = null;
-
+  @Input() dateFormat: string = 'YYYY/MM/dd'; // New input for date format
 
   calendarVisible: boolean = false;
-  monthYearSelectionVisible: boolean = true;
   currentDate: Date = new Date();
   selectedDate: Date | null = null;
   selectedDateEt: string | null = null;
@@ -76,33 +75,16 @@ export class LucyCalendarComponent implements OnInit {
 
   monthDisplay = (month: number): string => this.monthNames[month - 1]; /* Month numbers are 1-indexed so adjust for array (0-indexed)*/
 
-  // toggleMonthYearSelection() {
-  //   this.monthYearSelectionVisible = !this.monthYearSelectionVisible;
-  // }
-
   selectMonthYear(month: number, year: number) {
     this.selectedMonth = month;
     this.selectedYear = year;
     this.currentDate = toGregorian({ year, month, day: 1 });
   }
 
-  // onMonthChange(event: Event) {
-  //   const target = event.target as HTMLSelectElement;
-  //   const month = parseInt(target.value, 10);
-  //   this.selectMonthYear(month, this.selectedYear);
-  // }
-
   onMonthChanges(month: number) {
-    console.log('month', month);
     this.selectMonthYear(month, this.selectedYear);
     this.refreshYearOptions();
   }
-
-  // onYearChange(event: Event) {
-  //   const target = event.target as HTMLSelectElement;
-  //   const year = parseInt(target.value, 10);
-  //   this.selectMonthYear(this.selectedMonth, year);
-  // }
 
   onYearChanges(year: number) {
     this.selectMonthYear(this.selectedMonth, year);
@@ -122,7 +104,6 @@ export class LucyCalendarComponent implements OnInit {
 
   getLeadingEmptyDays(): any[] {
     const firstDay = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-    console.log('firstDay', firstDay.getDay());
     return Array(firstDay.getDay()).fill(null);
   }
 
@@ -166,20 +147,6 @@ export class LucyCalendarComponent implements OnInit {
     return prevMonthDate < this.min;
   }
 
-  // isMonthDisabled(): boolean {
-  //   if (this.max === null)
-  //     return false;
-  //   const monthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-  //   return monthDate > this.max || (this.selectedYear === this.max.getFullYear() && this.selectedMonth > this.max.getMonth() + 1);
-  // }
-
-  // isYearDisabled(): boolean {
-  //   if (this.max === null)
-  //     return false;
-  //   const yearDate = toGregorian({ year: this.selectedYear, month: 1, day: 1 });
-  //   return yearDate > this.max;
-  // }
-
   isMonthOptionDisabled(monthIndex: number): boolean {
     const monthDate = toGregorian({ year: this.selectedYear, month: monthIndex, day: 1 });
     return (this.max !== null && (monthDate > this.max || (this.selectedYear === this.max.getFullYear() && monthIndex > this.max.getMonth())))
@@ -189,6 +156,15 @@ export class LucyCalendarComponent implements OnInit {
   isYearOptionDisabled(year: number): boolean {
     const yearDate = toGregorian({ year: year, month: 1, day: 1 });
     return (this.max !== null && yearDate > this.max) || (this.min !== null && yearDate < this.min);
+  }
+
+  formatDate(): string {
+    const formattedMonth = ('0' + this.selectedMonth).slice(-2);
+    const formattedDay = ('0' + this.selectedDay).slice(-2);
+    return this.dateFormat
+      .replace(/YYYY/i, this.selectedYear.toString())
+      .replace(/MM/i, formattedMonth)
+      .replace(/dd/i, formattedDay);
   }
 
   @HostListener('document:click', ['$event'])

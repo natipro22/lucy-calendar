@@ -5,7 +5,7 @@
   <div class="relative">
     <input type="text" id="date-picker" readonly
       class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-800"
-      [placeholder]="placeholder" (click)="toggleCalendar()" [value]="selectedDateEt ? (selectedDateEt) : ''" />
+      [placeholder]="placeholder" (click)="toggleCalendar()" [value]="formatDate()" />
     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-gray-700" fill="none"
         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -42,40 +42,6 @@
       </app-dropdown>
       <app-dropdown [options]="filteredYears" [selected]="selectedYear"
         (selectedChange)="onYearChanges($event)"></app-dropdown>
-    </div>
-
-
-    <!-- Combined Dropdown -->
-    <div>
-      <div class="flex flex-col space-y-2">
-        <!-- Month-Year Combined Dropdown -->
-        <div class="overflow-y-auto"> <!-- Adjust max-h to fit your needs -->
-          <div class="grid grid-cols-2 gap-2 ">
-            <!-- Month Dropdown -->
-
-            <!-- class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" -->
-            <!-- <label class="block text-sm font-medium text-gray-700 mb-1">ወር</label> -->
-            <!-- <div>
-              <select [(ngModel)]="selectedMonth" (change)="onMonthChange($event)"
-                class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none">
-                <option *ngFor="let month of monthNames; let i = index" [value]="i + 1"
-                  [disabled]="isMonthOptionDisabled(i)" [ngClass]="{'text-gray-400': isMonthOptionDisabled(i)}">
-                  {{ month }}
-                </option>
-              </select>
-            </div> -->
-
-            <!-- Year Dropdown -->
-            <!-- <label class="block text-sm font-medium text-gray-700 mb-1">አመት</label> -->
-            <!-- <div class="max-h-1">
-              <select [(ngModel)]="selectedYear" (change)="onYearChange($event)" [attr.size]="1"
-                class="block text-sm w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none">
-                <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
-              </select>
-            </div> -->
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Days of the Month -->
