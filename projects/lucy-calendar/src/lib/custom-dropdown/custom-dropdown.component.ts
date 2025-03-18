@@ -30,14 +30,12 @@ export class DropdownComponent<T> implements OnInit {
     }
     // Scroll to the selected option if it exists
     setTimeout(() => {
-      if (this.selected) {
-        const selectedIndex = this.options.indexOf(this.selected);
-        if (selectedIndex >= 0) {
-          const dropdownElement = this.dropdownContainer.nativeElement;
-          const selectedElement = dropdownElement.children[selectedIndex];
-          if (selectedElement) {
-            selectedElement.scrollIntoView({ block: 'nearest' });
-          }
+      const selectedIndex = this.options.indexOf(this.selected);
+      if (selectedIndex >= 0) {
+        const dropdownElement = this.dropdownContainer.nativeElement.querySelector('ul');
+        const selectedElement = dropdownElement.children[selectedIndex];
+        if (selectedElement) {
+          selectedElement.scrollIntoView({ block: 'nearest' });
         }
       }
     });
@@ -52,7 +50,6 @@ export class DropdownComponent<T> implements OnInit {
         const selectedIndex = this.options.indexOf(this.selected);
         if (selectedIndex >= 0) {
           const dropdownElement = this.dropdownContainer.nativeElement.querySelector('ul');
-          const showedItems = 6;
           const selectedElement = dropdownElement.children[selectedIndex];
           if (selectedElement) {
             selectedElement.scrollIntoView({ block: 'nearest' });
