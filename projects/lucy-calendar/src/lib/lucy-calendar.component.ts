@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, HostListener, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { isEthiopianLeapYear, toEthiopian, toGregorian } from './date-convertor';
 import { DropdownComponent } from './custom-dropdown/custom-dropdown.component';
@@ -11,7 +11,18 @@ import { DropdownComponent } from './custom-dropdown/custom-dropdown.component';
   templateUrl: './lucy-calendar.component.html',
   styleUrl: './lucy-calendar.component.css'
 })
-export class LucyCalendarComponent implements OnInit {
+export class LucyCalendarComponent implements OnInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['value']) {
+      this.parseDate();
+    }
+    if (changes['dateValue'] && this.dateValue) {
+      const et = toEthiopian(this.dateValue);
+      this.selectedYear = et.year;
+      this.selectedMonth = et.month;
+      this.selectedDay = et.day;
+    }
+  }
   ngOnInit(): void {
     if (this.dateValue) {
       this.selectedYear = this.dateValue.getFullYear();
@@ -23,6 +34,8 @@ export class LucyCalendarComponent implements OnInit {
     }
     if (this.selectedDay !== 0) {
       this.selectDate(this.selectedDay);
+    } else {
+      this.value = '';
     }
     this.filteredMonths = this.availableMonths.filter(m => !this.isMonthOptionDisabled(m));
     this.filteredYears = this.availableYears.filter(y => !this.isYearOptionDisabled(y));
@@ -33,18 +46,16 @@ export class LucyCalendarComponent implements OnInit {
   @Input() dateValue: Date | null = new Date();
   @Output() dateValueChange: EventEmitter<Date | null> = new EventEmitter<Date | null>(); // Output event emitter for grValue
 
-  @Input() placeholder: string = 'DD/MM/YYYY';
+  @Input() placeholder: string | null = null;
   @Input() min: Date | null = null;
   @Input() max: Date | null = null;
-  @Input() dateFormat: string = 'YYYY/MM/dd'; // New input for date format
+  @Input() dateFormat: string = 'DD/MM/YYYY'; // New input for date format
   @Input() disabled: boolean = false; // New input for disabled state
   @Input() readonly: boolean = true; // New input for readonly state
 
   calendarVisible: boolean = false;
   currentDate: Date = new Date();
-  // grValue: Date | null = null;
-  // value: string | null = null;
-  selectedYear: number = toEthiopian(this.currentDate).year;
+  selectedYear: number = toEthiopian(this.currentDate).year; // Start with 2015 (Ethiopian year 2008)
   selectedMonth: number = 1; // Start with Meskerem (January in Ethiopian calendar)
   selectedDay: number = 0;
   monthNames: string[] = [
@@ -66,8 +77,12 @@ export class LucyCalendarComponent implements OnInit {
     this.filteredYears = this.availableYears.filter(y => !this.isYearOptionDisabled(y));
   }
 
+  emitChange() {
+    this.dateValueChange.emit(this.dateValue); // Emit the new date value
+    this.valueChange.emit(this.value);
+  }
+
   toggleCalendar() {
-    // if (this.disabled) return; // Prevent toggling if disabled
     this.calendarVisible = !this.calendarVisible;
     if (this.dateValue) {
       const et = toEthiopian(this.dateValue);
@@ -85,7 +100,9 @@ export class LucyCalendarComponent implements OnInit {
   selectMonthYear(month: number, year: number) {
     this.selectedMonth = month;
     this.selectedYear = year;
-    this.currentDate = toGregorian({ year, month, day: 1 });
+    this.dateValue = toGregorian({ year, month, day: 1 });
+    this.value = this.formatDate();
+    this.emitChange();
   }
 
   onMonthChanges(month: number) {
@@ -100,13 +117,15 @@ export class LucyCalendarComponent implements OnInit {
 
   prevMonth() {
     this.selectedMonth = (this.selectedMonth - 1 + 13) % 13 || 13;
-    this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
-
+    this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.value = this.formatDate();
+    this.emitChange()
   }
 
   nextMonth() {
     this.selectedMonth = (this.selectedMonth + 1) % 13 || 13;
-    this.currentDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.emitChange();
   }
 
   getLeadingEmptyDays(): any[] {
@@ -120,13 +139,11 @@ export class LucyCalendarComponent implements OnInit {
   }
 
   selectDate(day: number) {
-    // if (this.disabled) return; // Prevent selecting date if disabled
     this.selectedDay = day;
     this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
     this.value = this.formatDate();
     this.calendarVisible = false;
-    this.dateValueChange.emit(this.dateValue); // Emit the new date value
-    this.valueChange.emit(this.value); // Emit the new value
+    this.emitChange();
   }
 
   clearDate() {
@@ -135,8 +152,7 @@ export class LucyCalendarComponent implements OnInit {
     this.value = null;
     this.selectedDay = 0;
     this.calendarVisible = false;
-    this.dateValueChange.emit(this.dateValue); // Emit the new value
-    this.valueChange.emit(this.value); // Emit the new value
+    this.emitChange();
   }
 
   selectToday() {
