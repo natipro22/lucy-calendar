@@ -23,9 +23,11 @@ export class AppComponent {
   onDateChange(value: string | Date | null) {
     if (typeof value === 'string') {
       this.date = new Date(value);
+      this.etDate = value;
     }
     else if (value instanceof Date) {
       this.date = value;
+      this.grDate = value.toISOString().split('T')[0];
     }
     if (!this.date) {
       return;

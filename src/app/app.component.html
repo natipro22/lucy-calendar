@@ -4,16 +4,15 @@
   </nav>
   <div class="mt-4 flex flex-col items-center m-10">
     <div class="w-full md:w-1/2">
-      <lucy-calendar label="Ethiopian Date" placeholder="Enter Gregorian date" dateFormat="dd/mm/yyyy"
-        [readonly]="false" [dateValue]="date" (dateValueChange)="onDateChange($event)"
-        [(value)]="lucyDate"></lucy-calendar>
+      <lucy-calendar label="Ethiopian Date" dateFormat="dd/mm/yyyy" [readonly]="true" [dateValue]="date"
+        (dateValueChange)="onDateChange($event)" [(value)]="lucyDate"></lucy-calendar>
     </div>
     <label class="text-2xl font-semibold mt-4 font-serif">{{ date?.toLocaleDateString() | date:'EEE, MMM d yyyy'
       }}</label>
     <label class="text-2xl font-semibold mt-4 font-serif">{{ etDate }}</label>
     <div class="relative w-64 md:w-1/2 mt-4">
       <label for="gregorianDate" class="block text-gray-700 mb-2">Gregorian Date</label>
-      <input type="date" id="date-picker" [ngModel]="grDate" (ngModelChange)="onDateChange($event)"
+      <input type="date" id="date-picker" [(ngModel)]="grDate" (ngModelChange)="onDateChange($event)"
         class="block w-full px-4 py-2 text-gray-700 bg-white border disabled:cursor-not-allowed disabled:text-red-700 border-gray-300 rounded-lg shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-800" />
     </div>
   </div>
