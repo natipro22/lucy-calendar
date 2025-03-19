@@ -14,7 +14,13 @@ const JD_EPOCH_OFFSET_AMETE_ALEM: number = -285019; // ዓ/ዓ
 const JD_EPOCH_OFFSET_AMETE_MIHRET: number = 1723856; // ዓ/ም
 const JD_EPOCH_OFFSET_COPTIC: number = 1824665;
 const JD_EPOCH_OFFSET_GREGORIAN: number = 1721426;
-const JD_EPOCH_OFFSET_UNSET: number = -1;
+
+export const monthNames: string[] = [
+    "መስከረም", "ጥቅምት", "ህዳር", "ታህሳስ", "ጥር", "የካቲት",
+    "መጋቢት", "ሚይዚያ", "ግንቦት", "ሰኔ", "ሐምሌ", "ነሐሴ", "ጳጉሜ"
+];
+export const dayNames: string[] = ["እሁድ", "ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ"];
+
 
 export function toGregorian(param: { year: number, month: number, day: number }): Date {
     const { year, month, day } = param;
