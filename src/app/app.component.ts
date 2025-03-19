@@ -15,6 +15,7 @@ import { dayNames, monthNames, toEthiopian } from '../../projects/lucy-calendar/
 export class AppComponent {
   title = 'myapp';
   date: Date | null = null;
+  lucyDate: string | null = null;
   etDate: string = '';
   grDate: string = '';
   availableYears: number[] = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - 50 + i);
