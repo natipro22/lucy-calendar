@@ -33,7 +33,7 @@ export class DropdownComponent<T> implements OnInit {
       const selectedIndex = this.options.indexOf(this.selected);
       if (selectedIndex >= 0) {
         const dropdownElement = this.dropdownContainer.nativeElement.querySelector('ul');
-        const selectedElement = dropdownElement.children[selectedIndex];
+        const selectedElement = dropdownElement?.children[selectedIndex];
         if (selectedElement) {
           selectedElement.scrollIntoView({ block: 'nearest' });
         }

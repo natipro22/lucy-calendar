@@ -23,7 +23,9 @@ export class AppComponent {
   onDateChange(value: string | Date | null) {
     if (typeof value === 'string') {
       this.date = new Date(value);
-      this.etDate = value;
+      console.log('gr string', value);
+      console.log('gr date', this.date);
+      // this.etDate = value;
     }
     else if (value instanceof Date) {
       this.date = value;
@@ -32,7 +34,9 @@ export class AppComponent {
     if (!this.date) {
       return;
     }
+    console.log('selected date', this.date);
     const dateEt = toEthiopian(this.date); // Call the conversion function
+    console.log('selected date et date', dateEt);
     this.etDate = `${dayNames[this.date.getDay()]}, ${monthNames[dateEt.month - 1]} ${this.padZero(dateEt.day)} ${dateEt.year}`;
   }
 
