@@ -34,7 +34,7 @@ export class AppComponent {
     if (!this.date) {
       return;
     }
-    console.log('selected date', this.date);
+    console.log('selected date', this.date.toDateString());
     const dateEt = toEthiopian(this.date); // Call the conversion function
     console.log('selected date et date', dateEt);
     this.etDate = `${dayNames[this.date.getDay()]}, ${monthNames[dateEt.month - 1]} ${this.padZero(dateEt.day)} ${dateEt.year}`;
