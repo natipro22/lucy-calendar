@@ -13,7 +13,7 @@ import { dayNames, monthNames, toEthiopian } from '../../projects/lucy-calendar/
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'myapp';
+  title = 'Lucy Calendar Date Picker';
   date: Date | null = null;
   lucyDate: string | null = null;
   etDate: string = '';
