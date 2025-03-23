@@ -4,21 +4,28 @@ import { LucyCalendarComponent } from "../../projects/lucy-calendar/src/lib/lucy
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { dayNames, monthNames, toEthiopian } from '../../projects/lucy-calendar/src/lib/date-convertor';
+import { LucyDateComponent } from "../../projects/lucy-calendar/src/lib/lucy-date/lucy-date.component";
+import { LucyCalendarDirective } from '../../projects/lucy-calendar/src/public-api';
+import { LucyIconDirective } from '../../projects/lucy-calendar/src/lib/lucy-icon.directive';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LucyCalendarComponent, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LucyDateComponent, LucyCalendarDirective, LucyIconDirective, LucyCalendarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   date: Date | null = null;
+  date2: Date | null = null;
   lucyDate: string | null = null;
   etDate: string = '';
   grDate: string = '';
   availableYears: number[] = Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - 50 + i);
 
+  onEtDateChange(value: string | null) {
+    this.lucyDate = value;
+  }
   onDateChange(value: string | Date | null) {
     if (typeof value === 'string') {
       this.date = new Date(value);

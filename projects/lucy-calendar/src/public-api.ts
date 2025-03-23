@@ -4,3 +4,4 @@
 
 export * from './lib/lucy-calendar.service';
 export * from './lib/lucy-calendar.component';
+export * from './lib/lucy-calendar.directive';
