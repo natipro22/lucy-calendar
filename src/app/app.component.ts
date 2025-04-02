@@ -6,12 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { dayNames, monthNames, toEthiopian } from '../../projects/lucy-calendar/src/lib/date-convertor';
 import { LucyDateComponent } from "../../projects/lucy-calendar/src/lib/lucy-date/lucy-date.component";
 import { LucyCalendarDirective } from '../../projects/lucy-calendar/src/public-api';
-import { LucyIconDirective } from '../../projects/lucy-calendar/src/lib/lucy-icon.directive';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucyDateComponent, LucyCalendarDirective, LucyIconDirective, LucyCalendarComponent],
+  imports: [CommonModule, FormsModule, LucyCalendarDirective],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
