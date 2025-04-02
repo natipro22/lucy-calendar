@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { LucyCalendarComponent } from "../../projects/lucy-calendar/src/lib/lucy-calendar.component";
+// import { LucyCalendarComponent } from "../../projects/lucy-calendar/src/lib/lucy-calendar.component";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { dayNames, monthNames, toEthiopian } from '../../projects/lucy-calendar/src/lib/date-convertor';
-import { LucyDateComponent } from "../../projects/lucy-calendar/src/lib/lucy-date/lucy-date.component";
-import { LucyCalendarDirective } from '../../projects/lucy-calendar/src/public-api';
+import { dayNames, LucyCalendarDirective, monthNames, toEthiopian } from 'lucy-calendar';
+// import { dayNames, monthNames, toEthiopian } from '../../projects/lucy-calendar/src/lib/date-convertor';
+// import { LucyDateComponent } from "../../projects/lucy-calendar/src/lib/lucy-date/lucy-date.component";
+// import { LucyCalendarDirective } from '../../projects/lucy-calendar/src/public-api';
 
 @Component({
   selector: 'app-root',
