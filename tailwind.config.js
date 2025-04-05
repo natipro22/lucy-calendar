@@ -2,7 +2,8 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    "./projects/lucy-calendar/src/**/*.{html,ts}" // Add this line
+    "./node_modules/lucy-calendar/**/*.{js,mjs,ts}",
+    // "./projects/lucy-calendar/src/**/*.{html,ts}" // Add this line
   ],
   theme: {
     extend: {},
