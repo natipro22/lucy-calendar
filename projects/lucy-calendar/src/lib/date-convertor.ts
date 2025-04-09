@@ -22,8 +22,19 @@ export const monthNames: string[] = [
 export const dayNames: string[] = ["እሁድ", "ሰኞ", "ማክሰኞ", "ረቡዕ", "ሐሙስ", "ዓርብ", "ቅዳሜ"];
 
 
-export function toGregorian(param: { year: number, month: number, day: number }): Date {
-    const { year, month, day } = param;
+export function toGregorian(param: { year: number, month: number, day: number }): Date;
+export function toGregorian(year: number, month: number, day: number): Date;
+export function toGregorian(
+    yearOrParam: number | { year: number; month: number; day: number },
+    month?: number,
+    day?: number
+): Date {
+    // const { year, month, day } = param;
+    let year;
+    if (typeof yearOrParam === 'object')
+        ({ year, month, day } = yearOrParam);
+    else
+        ({ year, month, day } = { year: yearOrParam, month: Number(month), day: Number(day) });
 
     const era: number = year <= 0 ? JD_EPOCH_OFFSET_AMETE_ALEM : JD_EPOCH_OFFSET_AMETE_MIHRET;
 

@@ -18,7 +18,7 @@ export class LucyCalendarComponent implements OnInit, OnChanges {
     //   this.value = changes['value'].currentValue;
     //   this.parseDate();
     //   // this.valueChange.emit(this.value);
-    //   this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: this.selectedDay });
+    //   this.dateValue = toGregorian(this.selectedYear, this.selectedMonth, this.selectedDay);
     //   this.emitChange();
     // }
     // else 
@@ -113,7 +113,7 @@ export class LucyCalendarComponent implements OnInit, OnChanges {
   selectMonthYear(month: number, year: number) {
     this.selectedMonth = month;
     this.selectedYear = year;
-    this.dateValue = toGregorian({ year, month, day: 1 });
+    this.dateValue = toGregorian(year, month, 1);
     // this.value = this.formatDate();
     this.emitChange();
   }
@@ -130,20 +130,20 @@ export class LucyCalendarComponent implements OnInit, OnChanges {
 
   prevMonth() {
     this.selectedMonth = (this.selectedMonth - 1 + 13) % 13 || 13;
-    this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.dateValue = toGregorian(this.selectedYear, this.selectedMonth, 1);
     // this.value = this.formatDate();
     this.emitChange()
   }
 
   nextMonth() {
     this.selectedMonth = (this.selectedMonth + 1) % 13 || 13;
-    this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    this.dateValue = toGregorian(this.selectedYear, this.selectedMonth, 1);
     // this.value = this.formatDate();
     this.emitChange();
   }
 
   getLeadingEmptyDays(): any[] {
-    const firstDay = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: 1 });
+    const firstDay = toGregorian(this.selectedYear, this.selectedMonth, 1);
     return Array(firstDay.getDay()).fill(null);
   }
 
@@ -154,7 +154,7 @@ export class LucyCalendarComponent implements OnInit, OnChanges {
 
   selectDate(day: number) {
     this.selectedDay = day;
-    this.dateValue = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
+    this.dateValue = toGregorian(this.selectedYear, this.selectedMonth, day);
     // this.value = this.formatDate();
     this.calendarVisible = false;
     this.emitChange();
@@ -180,32 +180,32 @@ export class LucyCalendarComponent implements OnInit, OnChanges {
   isDayDisabled(day: number): boolean {
     if (this.max === null)
       return false;
-    const date = toGregorian({ year: this.selectedYear, month: this.selectedMonth, day: day });
+    const date = toGregorian(this.selectedYear, this.selectedMonth, day);
     return date > this.max;
   }
 
   isNextMonthDisabled(): boolean {
     if (this.max === null)
       return false;
-    const nextMonthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth + 1, day: 1 });
+    const nextMonthDate = toGregorian(this.selectedYear, this.selectedMonth + 1, 1);
     return nextMonthDate > this.max;
   }
 
   isPrevMonthDisabled(): boolean {
     if (this.min === null)
       return false;
-    const prevMonthDate = toGregorian({ year: this.selectedYear, month: this.selectedMonth - 1, day: 1 });
+    const prevMonthDate = toGregorian(this.selectedYear, this.selectedMonth - 1, 1);
     return prevMonthDate < this.min;
   }
 
   isMonthOptionDisabled(monthIndex: number): boolean {
-    const monthDate = toGregorian({ year: this.selectedYear, month: monthIndex, day: 1 });
+    const monthDate = toGregorian(this.selectedYear, monthIndex, 1);
     return (this.max !== null && (monthDate > this.max || (this.selectedYear === this.max.getFullYear() && monthIndex > this.max.getMonth())))
       || (this.min !== null && (monthDate < this.min || (this.selectedYear === this.min.getFullYear() && monthIndex < this.min.getMonth())));
   }
 
   isYearOptionDisabled(year: number): boolean {
-    const yearDate = toGregorian({ year: year, month: 1, day: 1 });
+    const yearDate = toGregorian(year, 1, 1);
     return (this.max !== null && yearDate > this.max) || (this.min !== null && yearDate < this.min);
   }
 
